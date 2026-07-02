@@ -1,3 +1,27 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: "Merriweather Sans";
+  src: url("./fonts/Merriweather_Sans/MerriweatherSans-VariableFont_wght.ttf")
+  format("truetype");
+}
+
+@font-face {
+  font-family: "Space Mono";
+  src: url("./fonts/Space_Mono/SpaceMono-Regular.ttf")
+  format("truetype");
+}
+
+body {
+  font-family: "Merriweather Sans", sans-serif;
+}
+
+h1,
+h2,
+h3 {
+  font-family: "Space Mono", monospace;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
