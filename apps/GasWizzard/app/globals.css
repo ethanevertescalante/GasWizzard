@@ -19,7 +19,7 @@ body {
 h1,
 h2,
 h3 {
-  font-family: "Space Mono", monospace;
+  font-family: "Merriweather Sans", sans-serif;
 }
 
 :root {
@@ -45,11 +45,7 @@ body {
   background: var(--background);
 }
 
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-}
+
 
 a {
   color: inherit;
