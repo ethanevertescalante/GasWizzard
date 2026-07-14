@@ -4,6 +4,7 @@ import {Map as LeafletMap} from 'leaflet';
 import {useRef} from "react";
 import 'leaflet/dist/leaflet.css';
 import Locator from "./locator";
+import MapHeader from "./MapHeader";
 
 const Map = () => {
     const mapRef = useRef<LeafletMap | null>(null);
@@ -14,7 +15,7 @@ const Map = () => {
                 ref={mapRef}
                 center={[51.505, -0.09]}
                 zoom={3}
-                scrollWheelZoom={false}
+                scrollWheelZoom={true}
                 doubleClickZoom={true}
                 style={{ width: '100%', height: '100%', position: 'fixed', top: 0, left: 0 }}
             >
@@ -23,7 +24,10 @@ const Map = () => {
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
+
             </MapContainer>
+            <MapHeader/>
+
         </div>
 
     )

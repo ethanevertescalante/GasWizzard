@@ -4,6 +4,7 @@ type ButtonProps = {
     buttonSize?: "sm" | "md" | "lg"
     children: React.ReactNode;
     onClick?: React.MouseEventHandler<HTMLButtonElement>;
+    onSubmit?: React.MouseEventHandler<HTMLButtonElement>;
     disabled?: boolean;
     className?: string;
 }
