@@ -9,12 +9,14 @@ export default function Locator(){
 
     const map = useMapEvents({
         locationfound(e){
+            // @ts-ignore
             setPosition(e.latlng);
             map.setView(e.latlng,zoom,{
                 animate: false,
             });
         },
         locationerror(e){
+            // @ts-ignore
             map.setView(fallback,zoom,{
                 animate: false,
             });
