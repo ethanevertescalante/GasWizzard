@@ -13,6 +13,9 @@ export const loginForm = z.object({
 export type LoginForm = z.infer<typeof loginForm>;
 
 export const signUpForm = z.object({
+    username: z.string({
+        error: "Invalid username, please pick another username",
+    }),
     email: z.string().trim().pipe(
         z.email({
             error: "Invalid email address",

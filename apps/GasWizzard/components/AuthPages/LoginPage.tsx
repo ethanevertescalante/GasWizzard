@@ -3,19 +3,41 @@ import {useForm} from "react-hook-form";
 import {loginForm, LoginForm} from "../../lib/ZodForms";
 import {zodResolver} from "@hookform/resolvers/zod";
 import Link from "next/link";
+import {authClient} from "../../lib/auth-client";
+import {useRouter} from "next/navigation";
 
 
 export default function LoginPage() {
     const {
         register,
         handleSubmit,
-        formState: { errors },
+        setError,
+        formState: { errors, isSubmitting },
     } = useForm<LoginForm>({
         resolver: zodResolver(loginForm)
     })
 
-    const onSubmit = (data: LoginForm) => {
-        console.log(data);
+    const router = useRouter();
+
+    const onSubmit = async (formData: LoginForm) => {
+        const { data, error } = await authClient.signIn.email({
+            email: formData.email,
+            password: formData.password,
+            rememberMe: false,
+            callbackURL: "/"
+        })
+
+        if (error) {
+            setError("root", {
+                type: "server",
+                message: error.message ?? "Unable to create account",
+            });
+
+            return;
+        }
+
+        router.replace("/");
+        router.refresh();
     }
 
     return (
@@ -34,8 +56,12 @@ export default function LoginPage() {
                     className="border border-gray-300 rounded-md shadow-sm"
                 />
                 {errors.password && <p className="text-red-500">{errors.password.message}</p>}
-
-                <Button buttonType="submit">Login</Button>
+                <Button buttonType="submit" disabled={isSubmitting}>Login</Button>
+                {errors.root && (
+                    <p className="text-red-500">
+                        {errors.root.message}
+                    </p>
+                )}
                 <p className="text-black">
                     Don't have an account?{" "}
                     <span className="hover:underline cursor-pointer">
