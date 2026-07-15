@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { authClient } from "../../lib/auth-client";
+import { authClient } from "@/lib/auth-client";
 
 export default function Header() {
     const [mounted, setMounted] = useState(false);

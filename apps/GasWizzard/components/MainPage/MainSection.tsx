@@ -1,4 +1,4 @@
-import { headerText } from "../../lib/FlavorText";
+import { headerText } from "@/lib/FlavorText";
 
 
 export default function MainSection() {

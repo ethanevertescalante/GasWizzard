@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { Inter } from "next/font/google";
+import { cn } from "@/lib/utils";
+
+const inter = Inter({subsets:['latin'],variable:'--font-sans'});
 
 const merriweatherSans = localFont({
   src: "./fonts/Merriweather_Sans/MerriweatherSans-VariableFont_wght.ttf",
@@ -35,7 +39,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-      <html lang="en">
+      <html lang="en" className={cn("font-sans", inter.variable)}>
       <body className={`${merriweatherSans.variable} ${spaceMono.variable}`}>
       {children}
       </body>
