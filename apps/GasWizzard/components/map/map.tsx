@@ -1,12 +1,16 @@
 "use client"
-import { MapContainer, TileLayer, ZoomControl } from "react-leaflet";
+import { MapContainer, ZoomControl } from "react-leaflet";
+import "@maptiler/leaflet-maptilersdk";
+import "@maptiler/sdk/dist/maptiler-sdk.css";
 import {Map as LeafletMap} from 'leaflet';
 import {useRef} from "react";
 import 'leaflet/dist/leaflet.css';
 import Locator from "./locator";
 import MapHeader from "./MapHeader";
+import MapTilerLayer from "@/components/map/MapTilerLayer";
 
-const tileUrl = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+// const tileUrl =
+//     `https://api.maptiler.com/maps/019f696c-fef5-71a6-b6da-8c357088d2d4/{z}/{x}/{y}.png?key=${process.env.NEXT_PUBLIC_MAPTILER_KEY}`;
 
 const Map = () => {
     const mapRef = useRef<LeafletMap | null>(null);
@@ -19,18 +23,16 @@ const Map = () => {
                 center={[51.505, -0.09]}
                 zoom={3}
                 scrollWheelZoom={true}
+                wheelPxPerZoomLevel={250}
+                wheelDebounceTime={80}
+                zoomSnap={0.25}
+                zoomDelta={0.25}
                 zoomControl={false}
                 doubleClickZoom={true}
                 className="fixed inset-0 h-screen w-screen"
             >
                 <Locator/>
-                <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                    url={tileUrl}
-                    updateWhenIdle={false}
-                    updateWhenZooming={false}
-                    keepBuffer={8}
-                />
+                <MapTilerLayer />
                 <ZoomControl position="bottomright" />
             </MapContainer>
             <MapHeader/>
