@@ -4,7 +4,7 @@ import {useState} from "react";
 import AvatarDropdown from "@/components/ui/AvatarDropdown";
 import blankProfile from "@/public/blankProfile.png"
 import Link from "next/link";
-import SearchView from "@/components/map/searchView";
+import SearchView from "@/components/map/SearchView";
 
 export default function MapHeader() {
     const {data: session} = authClient.useSession()

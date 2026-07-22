@@ -60,24 +60,32 @@ export default function SearchView({
       </InputGroup>
 
       {focused && results.length > 0 && (
-        <div className="absolute left-0 top-full mt-2 w-full z-[99999] max-h-1000 overflow-y-auto rounded-md border bg-white shadow-lg">
+        <div className="absolute left-0 top-full w-full z-[99999] max-h-1000 overflow-y-auto rounded-md border bg-white shadow-lg">
           {results.map((result) => {
-            const { name,housenumber, street, city, state, country, osm_id } =
+            const { name, housenumber, street, city, state, country, osm_id } =
               result.properties;
 
             const [long, lat] = result.geometry.coordinates;
 
-            const address = [`${housenumber ?? ""} ${street ?? ""} ${city ?? ""} ${state ?? ""} ${country ?? ""}`.trim()]
-              .filter(Boolean)
-              .join(", ");
+            const address = [`${housenumber ?? ""} ${street ?? ""}`.trim()]
+              .filter(Boolean);
+
+            const locationInformation = [
+                [city, state].filter(Boolean).join(", "),
+                country,
+            ]
+                .filter(Boolean)
+                .join(", ");
 
             return (
-              <div key={osm_id}>
-                <button className="block w-full px-4 py-2 text-left hover:bg-gray-100">
+              <div key={osm_id} className="relative h-fit">
+                <button className="block w-full px-4 py-2 text-left   hover:bg-gray-100">
                   {name}
                   <br/>
                   {address}
-                  <br />
+                  <div className="text-nowrap">
+                  {locationInformation}
+                  </div>
                   <span className="text-sm text-gray-500">
                     {lat}, {long}
                   </span>
