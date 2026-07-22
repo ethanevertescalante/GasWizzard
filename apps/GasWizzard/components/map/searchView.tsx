@@ -12,7 +12,7 @@ type AddressSearchProps = {
   setSearchTerm: React.Dispatch<React.SetStateAction<string>>;
   results: any[];
   setResults: React.Dispatch<React.SetStateAction<any[]>>;
-  goToResultAction: (lat: number, lng: number) => void;
+  goToResultAction: (lat: number, lng: number, address: string, locationInformation: string, name: string) => void;
 };
 
 export default function SearchView({
@@ -50,8 +50,8 @@ export default function SearchView({
     <div className="relative w-90 bg-white rounded-full">
       <InputGroup className="h-13">
         <InputGroupInput
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          value={searchTerm ?? ""}
+          onChange={(e) => setSearchTerm(e.target.value ?? "")}
           placeholder="Search..."
           onFocus={() => setFocused(true)}
           autoFocus={false}
@@ -65,13 +65,13 @@ export default function SearchView({
       {focused && results.length > 0 && (
         <div className="absolute left-0 top-full w-full z-[99999] max-h-1000 overflow-y-auto rounded-md border bg-white shadow-lg">
           {results.map((result) => {
-            const { name, housenumber, street, city, state, country, osm_id } =
+            const { name, housenumber, street, city, state, country, osm_id, osm_type } =
               result.properties;
 
             const [long, lat] = result.geometry.coordinates;
 
             const address = [`${housenumber ?? ""} ${street ?? ""}`.trim()]
-              .filter(Boolean);
+              .filter(Boolean).join("");
 
             const locationInformation = [
                 [city, state].filter(Boolean).join(", "),
@@ -82,16 +82,17 @@ export default function SearchView({
 
             return (
                 <button
-                    key={osm_id}
+                    key={`${lat}-${long}`}
                     type="button"
                     className="relative block h-auto min-h-0 w-full px-4 py-3 text-left align-top hover:bg-gray-100"
                     onClick={() => {
-                      console.log("clicked")
-                      goToResultAction(lat,long)
+
+                      goToResultAction(lat,long, address, locationInformation, name)
+                      setSearchTerm(name ?? address ?? "");
                       setFocused(false);
                     }}
                 >
-                  {name && <div>{name}</div>}
+                  {name && <div>{name},{osm_type}</div>}
                   {address && <div>{address}</div>}
                   {locationInformation && (
                       <div className="whitespace-nowrap">

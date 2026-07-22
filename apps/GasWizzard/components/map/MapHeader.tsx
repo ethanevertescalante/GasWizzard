@@ -7,7 +7,7 @@ import Link from "next/link";
 import SearchView from "@/components/map/SearchView";
 
 type MapHeaderProps = {
-    goToResultAction: (lat: number, lng: number) => void;
+    goToResultAction: (lat: number, lng: number, address: string, locationInfomration: string, name: string) => void;
 };
 
 export default function MapHeader({
