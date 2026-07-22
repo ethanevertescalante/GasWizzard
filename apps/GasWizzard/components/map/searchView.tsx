@@ -78,19 +78,22 @@ export default function SearchView({
                 .join(", ");
 
             return (
-              <div key={osm_id} className="relative h-fit">
-                <button className="block w-full px-4 py-2 text-left   hover:bg-gray-100">
-                  {name}
-                  <br/>
-                  {address}
-                  <div className="text-nowrap">
-                  {locationInformation}
-                  </div>
-                  <span className="text-sm text-gray-500">
+                <button
+                    key={osm_id}
+                    type="button"
+                    className="block h-auto min-h-0 w-full px-4 py-3 text-left align-top hover:bg-gray-100"
+                >
+                  {name && <div>{name}</div>}
+                  {address && <div>{address}</div>}
+                  {locationInformation && (
+                      <div className="whitespace-nowrap">
+                        {locationInformation}
+                      </div>
+                  )}
+                  <div className="text-sm text-gray-500">
                     {lat}, {long}
-                  </span>
+                  </div>
                 </button>
-              </div>
             );
           })}
         </div>
