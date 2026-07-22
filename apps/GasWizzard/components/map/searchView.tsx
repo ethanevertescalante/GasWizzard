@@ -12,6 +12,7 @@ type AddressSearchProps = {
   setSearchTerm: React.Dispatch<React.SetStateAction<string>>;
   results: any[];
   setResults: React.Dispatch<React.SetStateAction<any[]>>;
+  goToResultAction: (lat: number, lng: number) => void;
 };
 
 export default function SearchView({
@@ -19,6 +20,7 @@ export default function SearchView({
   setSearchTerm,
   results,
   setResults,
+  goToResultAction,
 }: AddressSearchProps) {
 
   const [focused, setFocused] = useState(false);
@@ -42,6 +44,8 @@ export default function SearchView({
     return () => clearTimeout(timer);
   }, [searchTerm]);
 
+
+
   return (
     <div className="relative w-90 bg-white rounded-full">
       <InputGroup className="h-13">
@@ -50,7 +54,6 @@ export default function SearchView({
           onChange={(e) => setSearchTerm(e.target.value)}
           placeholder="Search..."
           onFocus={() => setFocused(true)}
-          onBlur={() => setFocused(false)}
           autoFocus={false}
         />
 
@@ -81,7 +84,12 @@ export default function SearchView({
                 <button
                     key={osm_id}
                     type="button"
-                    className="block h-auto min-h-0 w-full px-4 py-3 text-left align-top hover:bg-gray-100"
+                    className="relative block h-auto min-h-0 w-full px-4 py-3 text-left align-top hover:bg-gray-100"
+                    onClick={() => {
+                      console.log("clicked")
+                      goToResultAction(lat,long)
+                      setFocused(false);
+                    }}
                 >
                   {name && <div>{name}</div>}
                   {address && <div>{address}</div>}
