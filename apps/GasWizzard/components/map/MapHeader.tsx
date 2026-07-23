@@ -4,7 +4,7 @@ import {useState} from "react";
 import AvatarDropdown from "@/components/ui/AvatarDropdown";
 import blankProfile from "@/public/blankProfile.png"
 import Link from "next/link";
-import SearchView from "../map/SearchView";
+import SearchView from "./SearchView";
 
 type MapHeaderProps = {
     goToResultAction: (lat: number, lng: number, address: string, locationInfomration: string, name: string) => void;
