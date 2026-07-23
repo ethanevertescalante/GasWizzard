@@ -30,8 +30,12 @@ export default function Locator(){
         })
     }, [map])
 
-    return position === null ? null : (
-        console.log("position", position)
-    )
+    useEffect(() => {
+        if (position) {
+            console.log("position", position);
+        }
+    }, [position]);
+
+    return null;
 
 }
