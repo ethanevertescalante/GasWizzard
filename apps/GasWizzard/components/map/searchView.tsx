@@ -55,6 +55,7 @@ export default function SearchView({
           placeholder="Search..."
           onFocus={() => setFocused(true)}
           autoFocus={false}
+          autoComplete="off"
         />
 
         <InputGroupAddon align="inline-end">
@@ -63,7 +64,7 @@ export default function SearchView({
       </InputGroup>
 
       {focused && results.length > 0 && (
-        <div className="absolute left-0 top-full w-full z-[99999] max-h-1000 overflow-y-auto rounded-md border bg-white shadow-lg">
+        <div className="absolute left-0 top-full mt-2 z-[99999] w-full rounded-md bg-white max-h-100 overflow-x-hidden overflow-y-scroll">
           {results.map((result) => {
             const { name, housenumber, street, city, state, country, osm_id, osm_type } =
               result.properties;
@@ -84,9 +85,8 @@ export default function SearchView({
                 <button
                     key={`${lat}-${long}`}
                     type="button"
-                    className="relative block h-auto min-h-0 w-full px-4 py-3 text-left align-top hover:bg-gray-100"
+                    className="block h-auto min-h-0 w-full px-4 py-3 text-left align-top hover:bg-gray-100"
                     onClick={() => {
-
                       goToResultAction(lat,long, address, locationInformation, name)
                       setSearchTerm(name ?? address ?? "");
                       setFocused(false);
