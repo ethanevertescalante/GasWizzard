@@ -30,4 +30,8 @@ export default function Locator(){
         })
     }, [map])
 
+    return position === null ? null : (
+        console.log("position", position)
+    )
+
 }
