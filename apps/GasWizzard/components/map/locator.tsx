@@ -30,10 +30,4 @@ export default function Locator(){
         })
     }, [map])
 
-    return position === null ? null : (
-        <Marker position={position}>
-            <Popup>You are here!</Popup>
-        </Marker>
-    )
-
 }
