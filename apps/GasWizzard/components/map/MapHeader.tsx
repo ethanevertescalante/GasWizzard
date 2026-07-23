@@ -4,9 +4,15 @@ import {useState} from "react";
 import AvatarDropdown from "@/components/ui/AvatarDropdown";
 import blankProfile from "@/public/blankProfile.png"
 import Link from "next/link";
-import SearchView from "@/components/map/searchView";
+import SearchView from "./SearchView";
 
-export default function MapHeader() {
+type MapHeaderProps = {
+    goToResultAction: (lat: number, lng: number, address: string, locationInfomration: string, name: string) => void;
+};
+
+export default function MapHeader({
+    goToResultAction
+}: MapHeaderProps) {
     const {data: session} = authClient.useSession()
     const profilePic = session?.user.image || null;
 
@@ -28,6 +34,7 @@ export default function MapHeader() {
                     setSearchTerm={setSearchTerm}
                     results={results}
                     setResults={setResults}
+                    goToResultAction={goToResultAction}
                 />
 
                 {!profilePic ? (
