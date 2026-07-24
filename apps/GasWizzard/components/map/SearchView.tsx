@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import searchAddress from "@/lib/searchAddress";
+import { searchAddress } from "@/lib/photon";
 import {
   InputGroup,
   InputGroupAddon,
@@ -66,7 +66,7 @@ export default function SearchView({
       {focused && results.length > 0 && (
         <div className="absolute left-0 top-full mt-2 z-[99999] w-full rounded-md bg-white max-h-100 overflow-x-hidden overflow-y-scroll">
           {results.map((result) => {
-            const { name, housenumber, street, city, state, country, osm_id, osm_type } =
+            const { name, housenumber, street, city, state, country, postcode } =
               result.properties;
 
             const [long, lat] = result.geometry.coordinates;
@@ -76,7 +76,7 @@ export default function SearchView({
 
             const locationInformation = [
                 [city, state].filter(Boolean).join(", "),
-                country,
+                country
             ]
                 .filter(Boolean)
                 .join(", ");
@@ -92,13 +92,15 @@ export default function SearchView({
                       setFocused(false);
                     }}
                 >
-                  {name && <div>{name},{osm_type}</div>}
+                  {name && <div className='italic'>{name}</div>}
                   {address && <div>{address}</div>}
                   {locationInformation && (
                       <div className="whitespace-nowrap">
                         {locationInformation}
                       </div>
+
                   )}
+                  {postcode && <div>{postcode}</div>}
                   <div className="text-sm text-gray-500">
                     {lat}, {long}
                   </div>
