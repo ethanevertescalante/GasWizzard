@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import searchAddress from "@/components/map/api/searchAddress";
+import searchAddress from "@/lib/searchAddress";
 import {
   InputGroup,
   InputGroupAddon,
