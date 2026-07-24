@@ -1,5 +1,5 @@
 "use client"
-import {MapContainer, Marker, Popup, ZoomControl} from "react-leaflet";
+import {MapContainer, Marker, Popup, useMapEvents, ZoomControl} from "react-leaflet";
 import "@maptiler/leaflet-maptilersdk";
 import "@maptiler/sdk/dist/maptiler-sdk.css";
 import {LatLngExpression, Map as LeafletMap} from 'leaflet';
@@ -12,6 +12,7 @@ import L from "leaflet";
 import "public/marker-icon.png"
 import "public/marker-icon-2x.png"
 import "public/marker-shadow.png"
+import ClickHandler from "@/components/map/ClickHandler";
 // const tileUrl =
 //     `https://api.maptiler.com/maps/019f696c-fef5-71a6-b6da-8c357088d2d4/{z}/{x}/{y}.png?key=${process.env.NEXT_PUBLIC_MAPTILER_KEY}`;
 
@@ -43,6 +44,8 @@ const Map = () => {
 
     };
 
+
+
     return (
         <div>
             <MapContainer
@@ -57,6 +60,7 @@ const Map = () => {
             >
                 <Locator/>
                 <MapTilerLayer />
+                <ClickHandler/>
                 {selectedPosition && (
                     <Marker icon={defaultMarkerIcon}  position={selectedPosition}>
                         <Popup>{name ?? address}</Popup>
