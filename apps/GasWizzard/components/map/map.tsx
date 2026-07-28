@@ -1,5 +1,5 @@
 "use client"
-import {MapContainer, Marker, Popup, ZoomControl} from "react-leaflet";
+import {MapContainer, Marker, Popup, useMapEvents, ZoomControl} from "react-leaflet";
 import "@maptiler/leaflet-maptilersdk";
 import "@maptiler/sdk/dist/maptiler-sdk.css";
 import {LatLngExpression, Map as LeafletMap} from 'leaflet';
@@ -12,6 +12,8 @@ import L from "leaflet";
 import "public/marker-icon.png"
 import "public/marker-icon-2x.png"
 import "public/marker-shadow.png"
+import ClickHandler from "@/components/map/ClickHandler";
+import { Coordinate } from "@/lib/osrm";
 // const tileUrl =
 //     `https://api.maptiler.com/maps/019f696c-fef5-71a6-b6da-8c357088d2d4/{z}/{x}/{y}.png?key=${process.env.NEXT_PUBLIC_MAPTILER_KEY}`;
 
@@ -31,6 +33,7 @@ const Map = () => {
     const [address, setAddress] = useState<string>("");
     const [locationInfomration, setLocationInfomration] = useState<string>("");
     const [name, setName] = useState<string>("");
+    const [selectedLocation, setSelectedLocation] = useState<LatLngExpression | null>(null);
 
     const goToResultAction = (lat: number, lng: number, address: string, locationInformation: string, name: string) => {
         const position: LatLngExpression = [lat, lng];
@@ -42,6 +45,8 @@ const Map = () => {
         mapRef.current?.setView(position, 16);
 
     };
+
+
 
     return (
         <div>
@@ -57,6 +62,10 @@ const Map = () => {
             >
                 <Locator/>
                 <MapTilerLayer />
+                <ClickHandler
+                    selectedLocation={selectedLocation}
+                    setSelectedLocation={setSelectedLocation}
+                />
                 {selectedPosition && (
                     <Marker icon={defaultMarkerIcon}  position={selectedPosition}>
                         <Popup>{name ?? address}</Popup>
