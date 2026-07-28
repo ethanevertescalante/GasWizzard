@@ -8,7 +8,10 @@
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "eslint --max-warnings 0",
-    "check-types": "next typegen && tsc --noEmit"
+    "check-types": "next typegen && tsc --noEmit",
+    "db:migrate:createonly": "pnpx prisma migrate dev --create-only",
+    "db:migrate:dev": "pnpx prisma migrate dev",
+    "db:migrate": "pnpx prisma migrate dev"
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",
