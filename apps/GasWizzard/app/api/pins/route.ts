@@ -60,18 +60,14 @@ export async function POST(request: NextRequest) {
             }
         })
 
+        console.log("Pin created successfully: ", pin)
         return NextResponse.json(
-            {
-                pin
-            },
+            { pin },
             { status: 201 },
         )
-
-
-
+        
     }catch(error){
         console.error("Failed to create pin: ",error);
-
         return NextResponse.json(
             { error: "Failed to create pin" },
             { status: 500 }
