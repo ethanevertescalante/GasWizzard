@@ -1,4 +1,5 @@
 export async function createPin(data: {
+    pinUsername: string,
     pinName?: string,
     pinAddress: string,
     pinLat: number,
