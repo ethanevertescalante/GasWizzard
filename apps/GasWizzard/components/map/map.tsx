@@ -31,16 +31,17 @@ const Map = () => {
 
     const [selectedPosition, setSelectedPosition] = useState<LatLngExpression | null>(null);
     const [address, setAddress] = useState<string>("");
-    const [locationInfomration, setLocationInfomration] = useState<string>("");
+    const [locationInformation, setLocationInformation] = useState<string>("");
     const [name, setName] = useState<string>("");
     const [selectedLocation, setSelectedLocation] = useState<LatLngExpression | null>(null);
+
 
     const goToResultAction = (lat: number, lng: number, address: string, locationInformation: string, name: string) => {
         const position: LatLngExpression = [lat, lng];
 
         setSelectedPosition(position);
         setAddress(address);
-        setLocationInfomration(locationInformation);
+        setLocationInformation(locationInformation);
         setName(name);
         mapRef.current?.setView(position, 16);
 
