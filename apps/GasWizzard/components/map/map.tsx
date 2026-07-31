@@ -29,25 +29,14 @@ const Map = () => {
     });
     const mapRef = useRef<LeafletMap | null>(null);
 
-    const [selectedPosition, setSelectedPosition] = useState<LatLngExpression | null>(null);
-    const [address, setAddress] = useState<string>("");
-    const [locationInformation, setLocationInformation] = useState<string>("");
-    const [name, setName] = useState<string>("");
+
     const [selectedLocation, setSelectedLocation] = useState<LatLngExpression | null>(null);
 
-
-    const goToResultAction = (lat: number, lng: number, address: string, locationInformation: string, name: string) => {
-        const position: LatLngExpression = [lat, lng];
-
-        setSelectedPosition(position);
-        setAddress(address);
-        setLocationInformation(locationInformation);
-        setName(name);
-        mapRef.current?.setView(position, 16);
-
+    const goToResultAction = (lat: number, lng: number) => {
+        const location: LatLngExpression = [lat, lng];
+        setSelectedLocation(location);
+        mapRef.current?.setView(location, 16);
     };
-
-
 
     return (
         <div>
@@ -67,11 +56,6 @@ const Map = () => {
                     selectedLocation={selectedLocation}
                     setSelectedLocation={setSelectedLocation}
                 />
-                {selectedPosition && (
-                    <Marker icon={defaultMarkerIcon}  position={selectedPosition}>
-                        <Popup>{name ?? address}</Popup>
-                    </Marker>
-                )}
                 <ZoomControl position="bottomright" />
             </MapContainer>
             <MapHeader goToResultAction={goToResultAction} />

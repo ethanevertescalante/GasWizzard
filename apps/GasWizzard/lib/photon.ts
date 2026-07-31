@@ -83,7 +83,7 @@ export function PhotonToAddress(photonData: photonResponse) {
             name: name,
             address: address,
             location: locationInformation,
-            coordinates: [long, lat],
+            coordinates: [long, lat] as unknown as Coordinate,
         }
 
     }catch(error){

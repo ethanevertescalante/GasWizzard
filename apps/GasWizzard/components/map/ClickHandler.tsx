@@ -1,109 +1,237 @@
+import { Marker, Popup, useMapEvents } from "react-leaflet";
+import { LatLng, LatLngExpression } from "leaflet";
+import { useEffect, useRef, useState } from "react";
+import {
+    photonResponse,
+    PhotonToAddress,
+    ReverseGeocode,
+} from "@/lib/photon";
 
-import {Marker, useMapEvents, Popup} from "react-leaflet";
-import {photonResponse, PhotonToAddress, ReverseGeocode} from "@/lib/photon";
-import {LatLngExpression} from "leaflet";
-import {useState} from "react";
-import {createPin} from "@/lib/pins";
-import {coordinates} from "@maptiler/sdk";
-import {Coordinate} from "@/lib/osrm";
+import { createPin } from "@/lib/pins";
+import { Coordinate } from "@/lib/osrm";
 import { Separator } from "@base-ui/react";
-import {Input} from "@/components/ui/input";
+import { Input } from "@/components/ui/input";
 
-type clickHandlerProps = {
+type ClickHandlerProps = {
     selectedLocation: LatLngExpression | null;
-    setSelectedLocation: (coordinate: LatLngExpression | null) => void;
+    setSelectedLocation: (
+        coordinate: LatLngExpression | null
+    ) => void;
+};
+
+function normalizeLatLng(
+    selectedLocation: LatLngExpression
+): LatLng {
+    if (selectedLocation instanceof LatLng) {
+        return selectedLocation;
+    }
+
+    if (Array.isArray(selectedLocation)) {
+        const [lat, lng] = selectedLocation;
+
+        return new LatLng(lat, lng);
+    }
+
+    return new LatLng(
+        selectedLocation.lat,
+        selectedLocation.lng
+    );
 }
 
-
 export default function ClickHandler({
-    selectedLocation,
-    setSelectedLocation,
-}: clickHandlerProps){
+                                         selectedLocation,
+                                         setSelectedLocation,
+                                     }: ClickHandlerProps) {
+    const [name, setName] = useState("");
+    const [address, setAddress] = useState("");
+    const [location, setLocation] = useState("");
+    const [coords, setCoords] = useState<Coordinate | null>(null);
+    const [pinName, setPinName] = useState("");
 
-    const [ name, setName ] = useState<string | undefined>("");
-    const [ address, setAddress ] = useState<string>("");
-    const [location, setLocation] = useState<string>("");
-    const [coord, setCoord] = useState<Coordinate | null>(null);
-    const [ pinName, setPinName ] = useState<string>("");
+    const [isLoading, setIsLoading] = useState(false);
+    const [hasError, setHasError] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
+
+    const requestIdRef = useRef(0);
 
     useMapEvents({
-        async click(e){
+        click(e) {
             setSelectedLocation(e.latlng);
-            console.log(e.latlng);
-            const response: photonResponse = await ReverseGeocode(e.latlng);
-            const {name, address, location, coordinates: coords} = PhotonToAddress(response);
+        },
+    });
 
-            setName(name);
-            setAddress(address);
-            setLocation(location);
-            setCoord(coords);
-
-            console.log(name);
-            console.log(address);
-            console.log(location);
-            console.log(coordinates);
+    useEffect(() => {
+        if (!selectedLocation) {
+            setName("");
+            setAddress("");
+            setLocation("");
+            setCoords(null);
+            setPinName("");
+            setHasError(false);
+            setIsLoading(false);
+            return;
         }
-    })
 
-    if (!selectedLocation) return;
+        const currentRequestId = ++requestIdRef.current;
 
-    return(
-            <Marker position={selectedLocation}>
-                {location ? (
-                    <Popup>
-                        <div className="relative min-w-60 bg-white rounded-full">
+        async function loadLocationInformation() {
+            setIsLoading(true);
+            setHasError(false);
+
+            setName("");
+            setAddress("");
+            setLocation("");
+            setCoords(null);
+            setPinName("");
+
+            try {
+                const latLng = normalizeLatLng(selectedLocation!);
+
+                const response: photonResponse =
+                    await ReverseGeocode(latLng);
+
+                const result = PhotonToAddress(response);
+
+                if (currentRequestId !== requestIdRef.current) {
+                    return;
+                }
+
+                setName(result.name ?? "");
+                setAddress(result.address ?? "");
+                setLocation(result.location ?? "");
+                setCoords(result.coordinates ?? null);
+
+                console.log({
+                    name: result.name,
+                    address: result.address,
+                    location: result.location,
+                    coordinates: result.coordinates,
+                });
+            } catch (error) {
+                if (currentRequestId !== requestIdRef.current) {
+                    return;
+                }
+
+                console.error("Reverse geocoding failed:", error);
+
+                setName("");
+                setAddress("");
+                setLocation("");
+                setCoords(null);
+                setHasError(true);
+            } finally {
+                if (currentRequestId === requestIdRef.current) {
+                    setIsLoading(false);
+                }
+            }
+        }
+
+        void loadLocationInformation();
+    }, [selectedLocation]);
+
+    async function handleCreatePin() {
+        const trimmedPinName = pinName.trim();
+
+        if (!coords || !trimmedPinName || isSaving) {
+            return;
+        }
+
+        setIsSaving(true);
+
+        try {
+            await createPin({
+                pinUsername: trimmedPinName,
+                pinName: name,
+                pinAddress: address,
+                pinLat: coords.lat,
+                pinLng: coords.lng,
+                markerType: "",
+            });
+
+            setPinName("");
+        } catch (error) {
+            console.error("Failed to create pin:", error);
+        } finally {
+            setIsSaving(false);
+        }
+    }
+
+    if (!selectedLocation) {
+        return null;
+    }
+
+    const hasLocationInformation =
+        Boolean(name) ||
+        Boolean(address) ||
+        Boolean(location);
+
+    return (
+        <Marker position={selectedLocation}>
+            <Popup minWidth={240}>
+                {isLoading ? (
+                    <div className="min-w-60 p-3 text-center">
+                        Loading location...
+                    </div>
+                ) : hasError || !hasLocationInformation ? (
+                    <div className="min-w-60 p-3 text-center text-red-500">
+                        No address is available at this location.
+                        Please select a different area.
+                    </div>
+                ) : (
+                    <div className="min-w-60 bg-white">
+                        <div className="space-y-1 p-2">
                             {name && (
-                                <div>
+                                <div className="font-medium">
                                     {name}
-                                    <br/>
-                                </div>)}
+                                </div>
+                            )}
                             {address && (
                                 <div>
                                     {address}
-                                    <br/>
-                                </div>)}
-                            {location && (
-                                <div>
-                                    {location}
-                                    <br/>
-                                </div>)}
-
-                            {coord && address && (
-                                <div className="flex flex-row justify-around  p-2  ">
-                                    <Input
-                                        value={pinName ?? ""}
-                                        onChange={e => setPinName(e.target.value)}
-                                        placeholder="home, work..."
-                                        className="w-3/5 h-full"
-
-                                    />
-                                    <Separator />
-                                    <button
-                                        onClick={ () => createPin({
-                                            pinUsername: pinName,
-                                            pinName: name,
-                                            pinAddress: address,
-                                            pinLat: coord?.lat,
-                                            pinLng: coord?.lng,
-                                            markerType: ""
-                                        })}
-                                        className="hover:cursor-pointer disabled:cursor-not-allowed disabled:text-gray-400 text-nowrap text-blue-900"
-                                        disabled={pinName === ""}
-                                    >
-                                        Add Pin
-                                    </button>
                                 </div>
-
+                            )}
+                            {location && (
+                                <div className="text-sm text-gray-600">
+                                    {location}
+                                </div>
                             )}
                         </div>
-                    </Popup>
-                ): (
-                    <Popup>
-                        <div className="text-red-500 text-center">
-                            No address available at this location, please select a different area!
-                        </div>
-                    </Popup>
+                        {coords && (
+                            <>
+                                <Separator />
+
+                                <div className="flex items-center gap-2 p-2">
+                                    <Input
+                                        value={pinName}
+                                        onChange={(e) =>
+                                            setPinName(e.target.value)
+                                        }
+                                        placeholder="Home, work..."
+                                        className="flex-1"
+                                    />
+
+                                    <button
+                                        type="button"
+                                        onClick={() =>
+                                            void handleCreatePin()
+                                        }
+                                        disabled={
+                                            !pinName.trim() ||
+                                            isSaving
+                                        }
+                                        className="text-nowrap text-blue-900 hover:cursor-pointer disabled:cursor-not-allowed disabled:text-gray-400"
+                                    >
+                                        {isSaving
+                                            ? "Adding..."
+                                            : "Add Pin"}
+                                    </button>
+                                </div>
+                            </>
+                        )}
+                    </div>
                 )}
-            </Marker>
-    )
+            </Popup>
+        </Marker>
+    );
 }
+
