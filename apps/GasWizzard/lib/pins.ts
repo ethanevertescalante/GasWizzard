@@ -1,3 +1,14 @@
+export type pinType = {
+    id:string
+    pinUsername: string;
+    pinName?: string;
+    pinAddress: string;
+    pinLat: number;
+    pinLng: number;
+    markerType: string;
+}
+
+
 export async function createPin(data: {
     pinUsername: string,
     pinName?: string,
@@ -22,16 +33,16 @@ export async function createPin(data: {
     return response.json();
 }
 
-export async function getPins(){
-    const response = await fetch('/api/pins');
+export async function getPins(): Promise<pinType[]> {
+    const response = await fetch("/api/pins");
 
     if (!response.ok) {
-        throw new Error("Failed to create pin: ");
+        throw new Error("Failed to fetch pins");
     }
 
-    const pins = await response.json();
-    console.log(pins);
+    const data: { pins: pinType[] } = await response.json();
 
-    return pins;
+    console.log(data.pins);
 
+    return data.pins;
 }

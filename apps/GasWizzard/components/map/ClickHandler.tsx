@@ -17,6 +17,7 @@ type ClickHandlerProps = {
     setSelectedLocation: (
         coordinate: LatLngExpression | null
     ) => void;
+    onPinCreated: () => Promise<void>;
 };
 
 function normalizeLatLng(
@@ -41,6 +42,7 @@ function normalizeLatLng(
 export default function ClickHandler({
                                          selectedLocation,
                                          setSelectedLocation,
+    onPinCreated,
                                      }: ClickHandlerProps) {
     const [name, setName] = useState("");
     const [address, setAddress] = useState("");
@@ -148,7 +150,7 @@ export default function ClickHandler({
                 pinLng: coords[1],
                 markerType: "",
             });
-
+            await onPinCreated();
             setPinName("");
         } catch (error) {
             console.error("Failed to create pin:", error);

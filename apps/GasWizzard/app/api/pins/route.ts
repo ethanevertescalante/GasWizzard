@@ -16,12 +16,18 @@ const createPinScheme = z.object({
 
 
 export async function GET() {
-
     try{
         const session = await auth.api.getSession({
             headers: await headers(),
         });
-        if (!session) return;
+        if (!session) {
+            console.error("Create Pin failed: No active session.");
+
+            return NextResponse.json(
+                { error: "Unauthorized" },
+                { status: 401 }
+            );
+        }
 
         const pins = await prisma.pins.findMany({
             where: {
@@ -32,7 +38,12 @@ export async function GET() {
             }
         })
 
-        return pins;
+        console.log(pins)
+
+        return NextResponse.json(
+            { pins },
+            { status: 201 },
+        )
     }catch(error){
         console.error(error);
         throw error;
