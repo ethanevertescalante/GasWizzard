@@ -21,3 +21,17 @@ export async function createPin(data: {
 
     return response.json();
 }
+
+export async function getPins(){
+    const response = await fetch('/api/pins');
+
+    if (!response.ok) {
+        throw new Error("Failed to create pin: ");
+    }
+
+    const pins = await response.json();
+    console.log(pins);
+
+    return pins;
+
+}

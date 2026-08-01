@@ -3,7 +3,6 @@ import {NextRequest, NextResponse} from "next/server";
 import { z } from "zod";
 import {auth} from "@/lib/auth";
 import {headers} from "next/headers";
-import {router} from "next/client";
 
 
 const createPinScheme = z.object({
@@ -19,11 +18,11 @@ const createPinScheme = z.object({
 export async function GET() {
 
     try{
-
         const session = await auth.api.getSession({
             headers: await headers(),
         });
         if (!session) return;
+
         const pins = await prisma.pins.findMany({
             where: {
                 userId: session.user.id
@@ -32,6 +31,8 @@ export async function GET() {
                 createdAt: "asc"
             }
         })
+
+        return pins;
     }catch(error){
         console.error(error);
         throw error;
