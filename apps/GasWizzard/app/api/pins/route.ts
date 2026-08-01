@@ -1,9 +1,10 @@
 import { prisma } from "@/lib/prisma"
 import {NextRequest, NextResponse} from "next/server";
-import { authClient } from "@/lib/auth-client";
 import { z } from "zod";
+import {auth} from "@/lib/auth";
+import {headers} from "next/headers";
+import {router} from "next/client";
 
-const {data: session} = await authClient.getSession();
 
 const createPinScheme = z.object({
     pinUsername: z.string().trim().min(1),
@@ -16,7 +17,12 @@ const createPinScheme = z.object({
 
 
 export async function GET() {
+
     try{
+
+        const session = await auth.api.getSession({
+            headers: await headers(),
+        });
         if (!session) return;
         const pins = await prisma.pins.findMany({
             where: {
@@ -34,7 +40,19 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
     try{
-        if (!session) return;
+        const session = await auth.api.getSession({
+            headers: await headers(),
+        });
+
+        if (!session) {
+            console.error("Create Pin failed: No active session.");
+
+
+            return NextResponse.json(
+                { error: "Unauthorized" },
+                { status: 401 }
+            );
+        }
         const body: unknown = await request.json();
         const result = createPinScheme.safeParse(body);
 
@@ -56,7 +74,7 @@ export async function POST(request: NextRequest) {
                 pinLat: result.data.pinLat,
                 pinLng: result.data.pinLng,
                 markerType: result.data.markerType,
-                userId: session.user.id
+                userId: session?.user.id
             }
         })
 

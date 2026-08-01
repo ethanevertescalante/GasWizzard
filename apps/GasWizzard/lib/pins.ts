@@ -6,6 +6,7 @@ export async function createPin(data: {
     pinLng: number,
     markerType: string,
 }) {
+    console.log(data);
     const response = await fetch('/api/pins', {
         method: 'POST',
         headers: {

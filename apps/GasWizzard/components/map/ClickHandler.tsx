@@ -107,6 +107,7 @@ export default function ClickHandler({
                     location: result.location,
                     coordinates: result.coordinates,
                 });
+                console.log("coords: ",coords)
             } catch (error) {
                 if (currentRequestId !== requestIdRef.current) {
                     return;
@@ -143,8 +144,8 @@ export default function ClickHandler({
                 pinUsername: trimmedPinName,
                 pinName: name,
                 pinAddress: address,
-                pinLat: coords.lat,
-                pinLng: coords.lng,
+                pinLat: coords[0],
+                pinLng: coords[1],
                 markerType: "",
             });
 
