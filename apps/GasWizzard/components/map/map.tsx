@@ -3,7 +3,7 @@ import {MapContainer, Marker, Popup, useMapEvents, ZoomControl} from "react-leaf
 import "@maptiler/leaflet-maptilersdk";
 import "@maptiler/sdk/dist/maptiler-sdk.css";
 import {LatLngExpression, Map as LeafletMap} from 'leaflet';
-import {useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import 'leaflet/dist/leaflet.css';
 import Locator from "./locator";
 import MapHeader from "./MapHeader";
@@ -13,7 +13,8 @@ import "public/marker-icon.png"
 import "public/marker-icon-2x.png"
 import "public/marker-shadow.png"
 import ClickHandler from "@/components/map/ClickHandler";
-import { Coordinate } from "@/lib/osrm";
+import {getPins} from "@/lib/pins";
+import { pinType } from "@/lib/pins";
 // const tileUrl =
 //     `https://api.maptiler.com/maps/019f696c-fef5-71a6-b6da-8c357088d2d4/{z}/{x}/{y}.png?key=${process.env.NEXT_PUBLIC_MAPTILER_KEY}`;
 
@@ -28,25 +29,28 @@ const Map = () => {
         shadowSize: [41, 41],
     });
     const mapRef = useRef<LeafletMap | null>(null);
-
-    const [selectedPosition, setSelectedPosition] = useState<LatLngExpression | null>(null);
-    const [address, setAddress] = useState<string>("");
-    const [locationInfomration, setLocationInfomration] = useState<string>("");
-    const [name, setName] = useState<string>("");
     const [selectedLocation, setSelectedLocation] = useState<LatLngExpression | null>(null);
+    const [pins, setPins] = useState<pinType[]>([]);
 
-    const goToResultAction = (lat: number, lng: number, address: string, locationInformation: string, name: string) => {
-        const position: LatLngExpression = [lat, lng];
+    async function loadPins() {
+        try{
+            const data = await getPins();
+            setPins(data);
+        }catch (error){
+            console.log("Failed to load pins: ",error);
+        }
+    }
 
-        setSelectedPosition(position);
-        setAddress(address);
-        setLocationInfomration(locationInformation);
-        setName(name);
-        mapRef.current?.setView(position, 16);
+    useEffect(() => {
+        void loadPins();
+    }, []);
 
+
+    const goToResultAction = (lat: number, lng: number) => {
+        const location: LatLngExpression = [lat, lng];
+        setSelectedLocation(location);
+        mapRef.current?.setView(location, 16);
     };
-
-
 
     return (
         <div>
@@ -65,11 +69,23 @@ const Map = () => {
                 <ClickHandler
                     selectedLocation={selectedLocation}
                     setSelectedLocation={setSelectedLocation}
+                    onPinCreated={loadPins}
                 />
-                {selectedPosition && (
-                    <Marker icon={defaultMarkerIcon}  position={selectedPosition}>
-                        <Popup>{name ?? address}</Popup>
-                    </Marker>
+                {pins && (
+                    <div>
+                        {pins.map(pin => (
+                            <Marker
+                                key={pin.id}
+                                position={[pin.pinLng, pin.pinLat]}
+                            >
+                                <Popup>
+                                    <strong>{pin.pinName}</strong>
+                                    <p>{pin.pinAddress}</p>
+                                </Popup>
+
+                            </Marker>
+                        ))}
+                    </div>
                 )}
                 <ZoomControl position="bottomright" />
             </MapContainer>
