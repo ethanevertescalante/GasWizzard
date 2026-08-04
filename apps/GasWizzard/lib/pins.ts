@@ -55,6 +55,12 @@ export async function deletePin(pinId: string): Promise<void> {
         },
         body: JSON.stringify(pinId),
     });
+
+    if (!response.ok) {
+        throw new Error("Failed to delete pin");
+    }
+
+
 }
 
 export async function editPin(pinData: {

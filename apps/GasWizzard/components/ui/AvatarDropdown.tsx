@@ -29,7 +29,7 @@ export default function AvatarDropdown(props: {img: string, size: string}) {
             <DropdownMenuContent className="w-32">
                 <DropdownMenuGroup>
                     <DropdownMenuItem>Profile</DropdownMenuItem>
-                    <DropdownMenuItem>Billing</DropdownMenuItem>
+                    <DropdownMenuItem>Pins</DropdownMenuItem>
                     <DropdownMenuItem>Settings</DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />

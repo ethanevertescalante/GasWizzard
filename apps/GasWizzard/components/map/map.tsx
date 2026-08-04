@@ -73,7 +73,10 @@ const Map = () => {
                     onPinCreated={loadPins}
                 />
                 {pins && (
-                    <UserPins pins={pins}/>
+                    <UserPins
+                        pins={pins}
+                        setPins={setPins}
+                        onPinDeleted={loadPins}/>
                 )}
                 <ZoomControl position="bottomright" />
             </MapContainer>

@@ -8,7 +8,6 @@ import {
 } from "@/lib/photon";
 
 import { createPin } from "@/lib/pins";
-import { Coordinate } from "@/lib/osrm";
 import { Separator } from "@base-ui/react";
 import { Input } from "@/components/ui/input";
 
@@ -33,6 +32,8 @@ function normalizeLatLng(
         return new LatLng(lat, lng);
     }
 
+    console.log(selectedLocation);
+
     return new LatLng(
         selectedLocation.lat,
         selectedLocation.lng
@@ -47,7 +48,7 @@ export default function ClickHandler({
     const [name, setName] = useState("");
     const [address, setAddress] = useState("");
     const [location, setLocation] = useState("");
-    const [coords, setCoords] = useState<Coordinate | null>(null);
+    const [coords, setCoords] = useState<LatLng | null>(null);
     const [pinName, setPinName] = useState("");
 
     const [isLoading, setIsLoading] = useState(false);
@@ -101,7 +102,7 @@ export default function ClickHandler({
                 setName(result.name ?? "");
                 setAddress(result.address ?? "");
                 setLocation(result.location ?? "");
-                setCoords(result.coordinates ?? null);
+                setCoords(latLng ?? null);
 
                 console.log({
                     name: result.name,
@@ -146,8 +147,8 @@ export default function ClickHandler({
                 pinUsername: trimmedPinName,
                 pinName: name,
                 pinAddress: address,
-                pinLat: coords.lat,
-                pinLng: coords.lng,
+                pinLat: coords.lng,
+                pinLng: coords.lat,
                 markerType: "",
             });
             await onPinCreated();
