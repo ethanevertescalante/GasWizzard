@@ -15,6 +15,7 @@ import "public/marker-shadow.png"
 import ClickHandler from "@/components/map/ClickHandler";
 import {getPins} from "@/lib/pins";
 import { pinType } from "@/lib/pins";
+import UserPins from "@/components/map/UserPins";
 // const tileUrl =
 //     `https://api.maptiler.com/maps/019f696c-fef5-71a6-b6da-8c357088d2d4/{z}/{x}/{y}.png?key=${process.env.NEXT_PUBLIC_MAPTILER_KEY}`;
 
@@ -72,20 +73,7 @@ const Map = () => {
                     onPinCreated={loadPins}
                 />
                 {pins && (
-                    <div>
-                        {pins.map(pin => (
-                            <Marker
-                                key={pin.id}
-                                position={[pin.pinLng, pin.pinLat]}
-                            >
-                                <Popup>
-                                    <strong>{pin.pinName}</strong>
-                                    <p>{pin.pinAddress}</p>
-                                </Popup>
-
-                            </Marker>
-                        ))}
-                    </div>
+                    <UserPins pins={pins}/>
                 )}
                 <ZoomControl position="bottomright" />
             </MapContainer>
