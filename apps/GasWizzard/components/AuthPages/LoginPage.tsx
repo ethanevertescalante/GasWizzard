@@ -24,7 +24,7 @@ export default function LoginPage() {
             email: formData.email,
             password: formData.password,
             rememberMe: false,
-            callbackURL: "/"
+            callbackURL: "/map"
         })
 
         if (error) {
@@ -36,7 +36,7 @@ export default function LoginPage() {
             return;
         }
 
-        router.replace("/");
+        router.replace("/map");
         router.refresh();
     }
 

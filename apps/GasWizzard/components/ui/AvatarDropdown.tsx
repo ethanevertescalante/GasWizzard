@@ -14,8 +14,14 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import {authClient} from "@/lib/auth-client";
+import Link from "next/link";
 
 export default function AvatarDropdown(props: {img: string, size: string}) {
+
+    const { data: session, isPending } = authClient.useSession();
+
+
     return (
         <DropdownMenu>
             <DropdownMenuTrigger render={
@@ -27,15 +33,37 @@ export default function AvatarDropdown(props: {img: string, size: string}) {
                 </Button>
             } />
             <DropdownMenuContent className="w-32">
-                <DropdownMenuGroup>
-                    <DropdownMenuItem>Profile</DropdownMenuItem>
-                    <DropdownMenuItem>Pins</DropdownMenuItem>
-                    <DropdownMenuItem>Settings</DropdownMenuItem>
-                </DropdownMenuGroup>
-                <DropdownMenuSeparator />
-                <DropdownMenuGroup>
-                    <DropdownMenuItem variant="destructive">Log out</DropdownMenuItem>
-                </DropdownMenuGroup>
+                {session ? (
+                    <div>
+                        <DropdownMenuGroup>
+                            <DropdownMenuItem>{session.user.name}</DropdownMenuItem>
+                            <DropdownMenuSeparator/>
+                            <DropdownMenuItem>Pins</DropdownMenuItem>
+                        </DropdownMenuGroup>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuGroup>
+                            <DropdownMenuItem variant="destructive" onClick={() => authClient.signOut()}>Log out</DropdownMenuItem>
+                        </DropdownMenuGroup>
+                    </div>
+                )
+                    :
+                    (
+                        <DropdownMenuGroup>
+                            <DropdownMenuItem>
+                                <Link href="/login">
+                                    Login
+                                </Link>
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator/>
+                            <DropdownMenuItem>
+                                <Link href="/signup">
+                                    Signup
+                                </Link>
+                            </DropdownMenuItem>
+                        </DropdownMenuGroup>
+                    )
+                }
+
             </DropdownMenuContent>
         </DropdownMenu>
     )

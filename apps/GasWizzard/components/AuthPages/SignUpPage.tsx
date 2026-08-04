@@ -26,6 +26,7 @@ export default function SignUpPage() {
             name: formData.username,
             email: formData.email,
             password: formData.password,
+            callbackURL: "/login"
         })
 
         if (error) {
@@ -37,7 +38,7 @@ export default function SignUpPage() {
             return;
         }
 
-        router.replace("/map");
+        router.replace("/login");
         router.refresh();
     }
 
