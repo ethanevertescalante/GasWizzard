@@ -146,8 +146,8 @@ export default function ClickHandler({
                 pinUsername: trimmedPinName,
                 pinName: name,
                 pinAddress: address,
-                pinLat: coords[0],
-                pinLng: coords[1],
+                pinLat: coords.lat,
+                pinLng: coords.lng,
                 markerType: "",
             });
             await onPinCreated();
