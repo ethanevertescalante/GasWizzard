@@ -1,5 +1,6 @@
 "use client"
 import dynamic from "next/dynamic";
+import {MapProvider} from "@/components/map/MapContext";
 //We have to disable Server Side Rendering, leaflet requires the window object which is
 //not available in next.js when SSR is enabled`
 // https://www.youtube.com/watch?v=qza0-qAXdzs
@@ -9,8 +10,8 @@ const Map = dynamic(() => import('../../components/map/map'), {
 
 export default function MapPage(){
     return (
-        <div>
+        <MapProvider>
             <Map/>
-        </div>
+        </MapProvider>
     )
 }

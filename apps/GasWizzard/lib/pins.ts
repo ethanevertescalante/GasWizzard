@@ -46,3 +46,32 @@ export async function getPins(): Promise<pinType[]> {
 
     return data.pins;
 }
+
+export async function deletePin(pinId: string): Promise<void> {
+    const response = await fetch('/api/pins', {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(pinId),
+    });
+
+    if (!response.ok) {
+        throw new Error("Failed to delete pin");
+    }
+
+
+}
+
+export async function editPin(pinData: {
+    pinId: string,
+    pinName: string,
+}): Promise<void> {
+    const response = await fetch('/api/pins', {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(pinData),
+    });
+}

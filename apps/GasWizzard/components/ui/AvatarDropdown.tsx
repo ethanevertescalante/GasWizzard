@@ -14,8 +14,30 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import {authClient} from "@/lib/auth-client";
+import Link from "next/link";
+import {getPins, pinType} from "@/lib/pins";
+import {PinDialog} from "@/components/map/PinDialog";
+import {useEffect, useState} from "react";
 
 export default function AvatarDropdown(props: {img: string, size: string}) {
+
+    const { data: session } = authClient.useSession();
+    const [pins, setPins] = useState<pinType[]>([]);
+
+        async function loadPins() {
+            try{
+                const data = await getPins();
+                setPins(data);
+            }catch (error){
+                console.log("Failed to load pins: ",error);
+            }
+        }
+
+    useEffect(() => {
+        void loadPins();
+    }, []);
+
     return (
         <DropdownMenu>
             <DropdownMenuTrigger render={
@@ -27,15 +49,39 @@ export default function AvatarDropdown(props: {img: string, size: string}) {
                 </Button>
             } />
             <DropdownMenuContent className="w-32">
-                <DropdownMenuGroup>
-                    <DropdownMenuItem>Profile</DropdownMenuItem>
-                    <DropdownMenuItem>Billing</DropdownMenuItem>
-                    <DropdownMenuItem>Settings</DropdownMenuItem>
-                </DropdownMenuGroup>
-                <DropdownMenuSeparator />
-                <DropdownMenuGroup>
-                    <DropdownMenuItem variant="destructive">Log out</DropdownMenuItem>
-                </DropdownMenuGroup>
+                {session ? (
+                    <div>
+                        <DropdownMenuGroup>
+                            <DropdownMenuItem>{session.user.name}</DropdownMenuItem>
+                            <DropdownMenuSeparator/>
+                            <DropdownMenuItem>
+                                <PinDialog pins={pins} loadPins={loadPins}/>
+                            </DropdownMenuItem>
+                        </DropdownMenuGroup>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuGroup>
+                            <DropdownMenuItem variant="destructive" onClick={() => authClient.signOut()}>Log out</DropdownMenuItem>
+                        </DropdownMenuGroup>
+                    </div>
+                )
+                    :
+                    (
+                        <DropdownMenuGroup>
+                            <DropdownMenuItem>
+                                <Link href="/login">
+                                    Login
+                                </Link>
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator/>
+                            <DropdownMenuItem>
+                                <Link href="/signup">
+                                    Signup
+                                </Link>
+                            </DropdownMenuItem>
+                        </DropdownMenuGroup>
+                    )
+                }
+
             </DropdownMenuContent>
         </DropdownMenu>
     )

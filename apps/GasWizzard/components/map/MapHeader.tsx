@@ -1,6 +1,6 @@
 "use client"
 import {authClient} from "@/lib/auth-client";
-import {useState} from "react";
+import { useState } from "react";
 import AvatarDropdown from "@/components/ui/AvatarDropdown";
 import blankProfile from "@/public/blankProfile.png"
 import Link from "next/link";
@@ -11,7 +11,7 @@ type MapHeaderProps = {
 };
 
 export default function MapHeader({
-    goToResultAction
+    goToResultAction,
 }: MapHeaderProps) {
     const {data: session} = authClient.useSession()
     const profilePic = session?.user.image || null;
@@ -40,7 +40,7 @@ export default function MapHeader({
                 {!profilePic ? (
                     <AvatarDropdown img={blankProfile.src} size={profileSize} />
                 ): (
-                    <AvatarDropdown img={profilePic} size={profileSize} />
+                    <AvatarDropdown img={profilePic} size={profileSize}  />
                 )}
 
             </div>

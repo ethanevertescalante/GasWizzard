@@ -4,7 +4,6 @@ import { z } from "zod";
 import {auth} from "@/lib/auth";
 import {headers} from "next/headers";
 
-
 const createPinScheme = z.object({
     pinUsername: z.string().trim().min(1),
     pinName: z.optional(z.string().trim()),
@@ -13,7 +12,6 @@ const createPinScheme = z.object({
     pinLng: z.float64(),
     markerType: z.string().uppercase().trim(),
 })
-
 
 export async function GET() {
     try{
@@ -67,7 +65,7 @@ export async function POST(request: NextRequest) {
         }
         const body: unknown = await request.json();
         const result = createPinScheme.safeParse(body);
-
+        console.log(result);
         if(!result.success){
             return NextResponse.json(
                 {
@@ -100,6 +98,54 @@ export async function POST(request: NextRequest) {
         console.error("Failed to create pin: ",error);
         return NextResponse.json(
             { error: "Failed to create pin" },
+            { status: 500 }
+        )
+    }
+}
+
+export async function DELETE(request: NextRequest) {
+    try{
+        const session = await auth.api.getSession({
+            headers: await headers(),
+        });
+
+        if (!session) {
+            console.error("No active session.");
+
+            return NextResponse.json(
+                { error: "Unauthorized" },
+                { status: 401 }
+            );
+        }
+
+        const pinId: string = await request.json();
+
+        console.log(pinId);
+
+        if (!pinId) {
+            console.error("no pinId found.");
+
+            return NextResponse.json(
+                { error: "Unauthorized" },
+                { status: 401 }
+            );
+        }
+
+        await prisma.pins.delete({
+            where:{
+                id: pinId
+            }
+        })
+
+        console.log("Pin deleted successfully: ", pinId)
+        return NextResponse.json(
+            { pinId },
+            { status: 201 },
+        )
+    }catch(error){
+        console.error("Failed to delete pin: ",error);
+        return NextResponse.json(
+            { error: "Failed to delete pin" },
             { status: 500 }
         )
     }
