@@ -1,8 +1,7 @@
 import {getPins, pinType} from "@/lib/pins";
 import {Marker, Popup} from "react-leaflet";
-import {useState} from "react";
+import {RefObject, useState} from "react";
 import {deletePin, editPin} from "@/lib/pins";
-
 
 type UserPinProps = {
     pins: pinType[]
@@ -10,10 +9,8 @@ type UserPinProps = {
     onPinDeleted: () => Promise<void>;
 }
 
-
 export default function UserPins({
     pins,
-    setPins,
     onPinDeleted,
 }: UserPinProps
 ){
@@ -43,6 +40,7 @@ export default function UserPins({
                 >
                     <Popup>
                         <strong>{pin.pinUsername}</strong>
+                        <p>{pin.pinName}</p>
                         <p>{pin.pinAddress}</p>
                         <div className="flex items-center justify-center gap-2">
                             {!editPinState ? (

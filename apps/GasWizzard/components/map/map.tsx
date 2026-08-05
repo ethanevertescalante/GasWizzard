@@ -1,5 +1,5 @@
 "use client"
-import {MapContainer, Marker, Popup, useMapEvents, ZoomControl} from "react-leaflet";
+import {MapContainer, ZoomControl} from "react-leaflet";
 import "@maptiler/leaflet-maptilersdk";
 import "@maptiler/sdk/dist/maptiler-sdk.css";
 import {LatLngExpression, Map as LeafletMap} from 'leaflet';
@@ -16,6 +16,7 @@ import ClickHandler from "@/components/map/ClickHandler";
 import {getPins} from "@/lib/pins";
 import { pinType } from "@/lib/pins";
 import UserPins from "@/components/map/UserPins";
+import MapRegister from "@/components/map/MapRegister";
 // const tileUrl =
 //     `https://api.maptiler.com/maps/019f696c-fef5-71a6-b6da-8c357088d2d4/{z}/{x}/{y}.png?key=${process.env.NEXT_PUBLIC_MAPTILER_KEY}`;
 
@@ -65,6 +66,7 @@ const Map = () => {
                 doubleClickZoom={true}
                 className="fixed inset-0 h-screen w-screen"
             >
+                <MapRegister/>
                 <Locator/>
                 <MapTilerLayer />
                 <ClickHandler
@@ -76,7 +78,8 @@ const Map = () => {
                     <UserPins
                         pins={pins}
                         setPins={setPins}
-                        onPinDeleted={loadPins}/>
+                        onPinDeleted={loadPins}
+                    />
                 )}
                 <ZoomControl position="bottomright" />
             </MapContainer>

@@ -16,11 +16,27 @@ import {
 } from "@/components/ui/dropdown-menu"
 import {authClient} from "@/lib/auth-client";
 import Link from "next/link";
+import {getPins, pinType} from "@/lib/pins";
+import {PinDialog} from "@/components/map/PinDialog";
+import {useEffect, useState} from "react";
 
 export default function AvatarDropdown(props: {img: string, size: string}) {
 
-    const { data: session, isPending } = authClient.useSession();
+    const { data: session } = authClient.useSession();
+    const [pins, setPins] = useState<pinType[]>([]);
 
+        async function loadPins() {
+            try{
+                const data = await getPins();
+                setPins(data);
+            }catch (error){
+                console.log("Failed to load pins: ",error);
+            }
+        }
+
+    useEffect(() => {
+        void loadPins();
+    }, []);
 
     return (
         <DropdownMenu>
@@ -38,7 +54,9 @@ export default function AvatarDropdown(props: {img: string, size: string}) {
                         <DropdownMenuGroup>
                             <DropdownMenuItem>{session.user.name}</DropdownMenuItem>
                             <DropdownMenuSeparator/>
-                            <DropdownMenuItem>Pins</DropdownMenuItem>
+                            <DropdownMenuItem>
+                                <PinDialog pins={pins} loadPins={loadPins}/>
+                            </DropdownMenuItem>
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />
                         <DropdownMenuGroup>
