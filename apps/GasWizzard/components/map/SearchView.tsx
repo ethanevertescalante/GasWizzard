@@ -1,4 +1,4 @@
-import {MouseEvent, TouchEvent, useEffect, useRef, useState} from "react";
+import { useEffect, useRef, useState } from "react";
 import { searchAddress } from "@/lib/photon";
 import {
   InputGroup,
@@ -65,7 +65,7 @@ export default function SearchView({
 
 
   return (
-    <div ref={searchRef} className="relative w-1/2 bg-white rounded-full">
+    <div ref={searchRef} className="relative w-2/3 bg-white rounded-full">
       <InputGroup className="h-13">
         <InputGroupInput
           value={searchTerm ?? ""}
@@ -113,7 +113,7 @@ export default function SearchView({
                   {name && <div className='italic'>{name}</div>}
                   {address && <div>{address}</div>}
                   {locationInformation && (
-                      <div className="whitespace-nowrap">
+                      <div className="whitespace-wrap">
                         {locationInformation}
                       </div>
 
