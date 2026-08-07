@@ -47,7 +47,7 @@ export default function SearchView({
 
 
   return (
-    <div className="relative w-90 bg-white rounded-full">
+    <div className="relative w-1/2 bg-white rounded-full">
       <InputGroup className="h-13">
         <InputGroupInput
           value={searchTerm ?? ""}
