@@ -32,9 +32,9 @@ export default function Header() {
                         <Link href="/map">Map</Link>
                     </li>
 
-                    <li className="hover:underline cursor-pointer">
-                        <Link href="/about">About</Link>
-                    </li>
+                    {/*<li className="hover:underline cursor-pointer">*/}
+                    {/*    <Link href="/about">About</Link>*/}
+                    {/*</li>*/}
 
                     {!mounted || isPending ? (
                         <li>Loading...</li>
