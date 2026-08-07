@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import {Marker, Popup, useMapEvents} from "react-leaflet";
 
-const fallback = [37.8025, -122.405833]; //coit tower sf/bay area
+export const fallback = [37.8025, -122.405833]; //coit tower sf/bay area
 const zoom = 10;
 
 export default function Locator(){
