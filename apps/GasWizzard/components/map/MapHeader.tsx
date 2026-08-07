@@ -24,7 +24,6 @@ export default function MapHeader({
     return (
         <header className="fixed top-0 left-0 right-0 z-[9999] overflow-visible pointer-events-none">
             <div className="flex justify-center items-center gap-5 py-3 pointer-events-auto overflow-visible">
-
                 <Link href="/" className="md:hidden text-2xl">
                     <span className="text-red-500">G</span>
                     <span className="text-blue-900">W</span>

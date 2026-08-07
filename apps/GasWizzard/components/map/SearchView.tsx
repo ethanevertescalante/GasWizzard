@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import {MouseEvent, TouchEvent, useEffect, useRef, useState} from "react";
 import { searchAddress } from "@/lib/photon";
 import {
   InputGroup,
@@ -44,10 +44,28 @@ export default function SearchView({
     return () => clearTimeout(timer);
   }, [searchTerm]);
 
+  const searchRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleOutsideClick(event: PointerEvent) {
+      if(
+          searchRef.current && !searchRef.current.contains(event.target as Node)
+      ) {
+        setFocused(false);
+      }
+    }
+
+    document.addEventListener("pointerdown", handleOutsideClick);
+
+
+    return () => {
+      document.removeEventListener("pointerdown", handleOutsideClick);
+    };
+  }, []);
 
 
   return (
-    <div className="relative w-1/2 bg-white rounded-full">
+    <div ref={searchRef} className="relative w-1/2 bg-white rounded-full">
       <InputGroup className="h-13">
         <InputGroupInput
           value={searchTerm ?? ""}
