@@ -6,6 +6,7 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger,
+    AlertDialogDescription
 } from "@/components/ui/alert-dialog"
 import {pinType} from "@/lib/pins";
 import {useRef, useState} from "react";
@@ -42,24 +43,26 @@ export function PinDialog({
             onOpenChange={setPinsDialogOpen}
         >
             <AlertDialogTrigger onClick={(e) => e.stopPropagation()} render={<button onClick={onPinsButtonClick}>Pins</button>} />
-            <AlertDialogContent>
-                <AlertDialogHeader>
-                    <AlertDialogTitle>Your Pins:</AlertDialogTitle>
-                </AlertDialogHeader>
-                {pins.length > 0  ? (
-                    pins.map((pin) => (
-                        <div onClick={() => goToPin(pin.pinLat, pin.pinLng)} key={pin.id} className="hover:cursor-pointer hover:bg-gray-200 p-2 rounded-2xl">
-                            <div>{pin.pinUsername}</div>
-                            <div>{pin.pinName}</div>
-                            <div>{pin.pinAddress}</div>
-                            <div>{pin.pinLat} {pin.pinLng}</div>
-                        </div>
-                    ))
-                ): (
-                    <div className="text-center">You have no pins. Create one by searching or clicking on the map!</div>
-                )}
-                <AlertDialogFooter>
-                    <AlertDialogCancel className="bg-black/80 text-white">Exit</AlertDialogCancel>
+            <AlertDialogContent className="h-2/3 md:h-auto">
+                <div className="h-full overflow-y-auto">
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Your Pins:</AlertDialogTitle>
+                    </AlertDialogHeader>
+                    {pins.length > 0  ? (
+                        pins.map((pin) => (
+                            <div onClick={() => goToPin(pin.pinLat, pin.pinLng)} key={pin.id} className="hover:cursor-pointer hover:bg-gray-200 p-2 rounded-2xl">
+                                <div>{pin.pinUsername}</div>
+                                <div>{pin.pinName}</div>
+                                <div>{pin.pinAddress}</div>
+                                <div>{pin.pinLat} {pin.pinLng}</div>
+                            </div>
+                        ))
+                    ): (
+                        <div className="text-center">You have no pins. Create one by searching or clicking on the map!</div>
+                    )}
+                </div>
+                <AlertDialogFooter >
+                    <AlertDialogCancel className="w-full bg-black/80 text-white">Exit</AlertDialogCancel>
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>

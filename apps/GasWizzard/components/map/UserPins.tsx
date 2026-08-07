@@ -32,7 +32,7 @@ export default function UserPins({
 
 
     return (
-        <div>
+        <div >
             {pins.map(pin => (
                 <Marker
                     key={pin.id}
