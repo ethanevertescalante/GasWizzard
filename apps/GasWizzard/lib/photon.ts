@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { Coordinate } from "@/lib/osrm";
+import {fallback} from "@/components/map/locator";
 
 export type photonResponse = {
     type: string;
@@ -43,13 +44,18 @@ export async function ReverseGeocode({ lng, lat }: Coordinate) {
     }
 }
 
-export async function searchAddress(searchTerm: string) {
+export async function searchAddress(
+    searchTerm: string,
+) {
     // const limit = 4
-    try{
-        const response = await axios.get(`https://photon.komoot.io/api/?q=${searchTerm}`);
-        // // if you want a limit
-        // const response = await axios.get(`https://photon.komoot.io/api/?q=${searchTerm}&limit=${limit}`);
 
+    const coords = await getUserLocation();
+    console.log(coords);
+
+    try{
+        const response = await axios.get(`https://photon.komoot.io/api/?q=${searchTerm}&lat=${coords.lat}&lon=${coords.lng}`);
+        // // if you want a limit
+        // const response = await axios.get(`https://photon.komoot.io/api/?q=${searchTerm}&limit=${limit}&lat=${userLat}&lng=${userLng}`);
         console.log(response.data);
         return response.data;
     }catch(error){
@@ -90,4 +96,26 @@ export function PhotonToAddress(photonData: photonResponse) {
         throw error;
     }
 
+}
+
+function getUserLocation(): Promise<{
+    lat: number;
+    lng: number;
+}> {
+    return new Promise((resolve) => {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                resolve({
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude,
+                });
+            },
+            () => {
+                resolve({
+                    lat: fallback[0] as number,
+                    lng: fallback[1] as number,
+                });
+            }
+        );
+    });
 }
