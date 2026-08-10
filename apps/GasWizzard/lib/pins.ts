@@ -42,7 +42,6 @@ export async function getPins(): Promise<pinType[]> {
 
     const data: { pins: pinType[] } = await response.json();
 
-    console.log(data.pins);
 
     return data.pins;
 }
