@@ -60,7 +60,7 @@ export default function AvatarDropdown(props: {img: string, size: string}) {
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />
                         <DropdownMenuGroup>
-                            <DropdownMenuItem className="w-full text-left" variant="destructive" onClick={() => authClient.signOut()}>Log out</DropdownMenuItem>
+                            <DropdownMenuItem className="w-full text-left cursor-pointer" variant="destructive" onClick={() => authClient.signOut()}>Log out</DropdownMenuItem>
                         </DropdownMenuGroup>
                     </div>
                 )
@@ -68,13 +68,13 @@ export default function AvatarDropdown(props: {img: string, size: string}) {
                     (
                         <DropdownMenuGroup>
                             <DropdownMenuItem >
-                                <Link className="w-full text-left" href="/login">
+                                <Link className="w-full text-left cursor-pointer" href="/login">
                                     Login
                                 </Link>
                             </DropdownMenuItem>
                             <DropdownMenuSeparator/>
                             <DropdownMenuItem>
-                                <Link className="w-full text-left" href="/signup">
+                                <Link className="w-full text-left cursor-pointer" href="/signup">
                                     Signup
                                 </Link>
                             </DropdownMenuItem>

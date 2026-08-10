@@ -43,6 +43,9 @@ export default function UserPins({
                         <p>{pin.pinName}</p>
                         <p>{pin.pinAddress}</p>
                         <div className="flex items-center justify-center gap-2">
+                            <button className="bg-orange-500 p-2 rounded-md text-sm font-bold text-white">
+                                Add Connection
+                            </button>
                             {!editPinState ? (
                                 <button onClick={() => editPin()} className="bg-blue-500  p-2 rounded-md text-sm font-bold text-white">
                                     Edit

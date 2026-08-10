@@ -9,6 +9,7 @@
     "start": "next start",
     "lint": "eslint --max-warnings 0",
     "check-types": "next typegen && tsc --noEmit",
+    "db:generate": "pnpx prisma generate",
     "db:migrate:createonly": "pnpx prisma migrate dev --create-only",
     "db:migrate:dev": "pnpx prisma migrate dev",
     "db:migrate": "pnpx prisma migrate dev"
