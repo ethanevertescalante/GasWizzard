@@ -60,21 +60,21 @@ export default function AvatarDropdown(props: {img: string, size: string}) {
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />
                         <DropdownMenuGroup>
-                            <DropdownMenuItem variant="destructive" onClick={() => authClient.signOut()}>Log out</DropdownMenuItem>
+                            <DropdownMenuItem className="w-full text-left" variant="destructive" onClick={() => authClient.signOut()}>Log out</DropdownMenuItem>
                         </DropdownMenuGroup>
                     </div>
                 )
                     :
                     (
                         <DropdownMenuGroup>
-                            <DropdownMenuItem>
-                                <Link href="/login">
+                            <DropdownMenuItem >
+                                <Link className="w-full text-left" href="/login">
                                     Login
                                 </Link>
                             </DropdownMenuItem>
                             <DropdownMenuSeparator/>
                             <DropdownMenuItem>
-                                <Link href="/signup">
+                                <Link className="w-full text-left" href="/signup">
                                     Signup
                                 </Link>
                             </DropdownMenuItem>
