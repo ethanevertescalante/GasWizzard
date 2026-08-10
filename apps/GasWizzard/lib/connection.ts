@@ -14,7 +14,8 @@ export async function createConnection(data:{
     connectionUsername: String;
     numberOfTrips: number;
     roundTrip: boolean;
-    StartPinId: string;
+    timeframe: string;
+    startPinId: string;
     endPinId: string;
     userId: string;
 }) {

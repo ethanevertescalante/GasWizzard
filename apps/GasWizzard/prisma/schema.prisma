@@ -101,6 +101,7 @@ model Connections {
   updatedAt          DateTime @updatedAt
   connectionUsername String
   numberOfTrips      Int
+  timeframe          String // TRIP(1) / WORK WEEK(5) / WEEK(7) / MONTH(30) / YEAR (365)
   roundTrip          Boolean
   startPinId         String
   endPinId           String
