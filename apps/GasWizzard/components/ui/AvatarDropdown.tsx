@@ -19,11 +19,14 @@ import Link from "next/link";
 import {getPins, pinType} from "@/lib/pins";
 import {PinDialog} from "@/components/map/PinDialog";
 import {useEffect, useState} from "react";
+import {connectionType, getConnections} from "@/lib/connection";
+import {ConnectionDialog} from "@/components/map/ConnectionDialog";
 
 export default function AvatarDropdown(props: {img: string, size: string}) {
 
     const { data: session } = authClient.useSession();
     const [pins, setPins] = useState<pinType[]>([]);
+    const [connections, setConnections] = useState<connectionType[]>([])
 
         async function loadPins() {
             try{
@@ -34,8 +37,18 @@ export default function AvatarDropdown(props: {img: string, size: string}) {
             }
         }
 
+        async function loadConnections() {
+            try{
+                const data = await getConnections();
+                setConnections(data);
+            }catch (error){
+                console.log("Failed to load connections: ",error);
+            }
+        }
+
     useEffect(() => {
         void loadPins();
+        void loadConnections();
     }, []);
 
     return (
@@ -56,6 +69,9 @@ export default function AvatarDropdown(props: {img: string, size: string}) {
                             <DropdownMenuSeparator/>
                             <DropdownMenuItem>
                                 <PinDialog pins={pins} loadPins={loadPins}/>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>
+                                <ConnectionDialog connections={connections} loadConnections={loadConnections}/>
                             </DropdownMenuItem>
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />

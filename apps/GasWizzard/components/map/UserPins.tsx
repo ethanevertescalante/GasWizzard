@@ -2,7 +2,7 @@ import { pinType } from "@/lib/pins";
 import { Marker, Popup } from "react-leaflet";
 import { useState } from "react";
 import { deletePin } from "@/lib/pins";
-import { ConnectionDialog } from "@/components/map/ConnectionDialog";
+import { AddConnectionDialog } from "@/components/map/AddConnectionDialog";
 
 type UserPinProps = {
     pins: pinType[];
@@ -85,7 +85,7 @@ export default function UserPins({
             ))}
 
             {connectionDialogOpen && selectedPin && (
-                <ConnectionDialog
+                <AddConnectionDialog
                     startPin={selectedPin}
                     pins={pins}
                     onClose={() => {
