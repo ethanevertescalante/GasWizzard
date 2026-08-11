@@ -17,7 +17,6 @@ export async function createPin(data: {
     pinLng: number,
     markerType: string,
 }) {
-    console.log(data);
     const response = await fetch('/api/pins', {
         method: 'POST',
         headers: {
@@ -42,7 +41,6 @@ export async function getPins(): Promise<pinType[]> {
 
     const data: { pins: pinType[] } = await response.json();
 
-    console.log(data.pins);
 
     return data.pins;
 }

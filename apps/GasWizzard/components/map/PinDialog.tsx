@@ -6,11 +6,10 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger,
-    AlertDialogDescription
 } from "@/components/ui/alert-dialog"
 import {pinType} from "@/lib/pins";
-import {useRef, useState} from "react";
-import {LatLngExpression, Map as LeafletMap} from "leaflet";
+import { useState } from "react";
+import {LatLngExpression} from "leaflet";
 import {useMapContext} from "@/components/map/MapContext";
 
 type PinDialogProps = {
@@ -42,11 +41,11 @@ export function PinDialog({
             open={pinsDialogOpen}
             onOpenChange={setPinsDialogOpen}
         >
-            <AlertDialogTrigger onClick={(e) => e.stopPropagation()} render={<button onClick={onPinsButtonClick}>Pins</button>} />
+            <AlertDialogTrigger onClick={(e) => e.stopPropagation()} render={<button className="w-full text-left cursor-pointer" onClick={onPinsButtonClick}>My Pins</button>} />
             <AlertDialogContent className="h-2/3 md:h-auto">
                 <div className="h-full overflow-y-auto">
                     <AlertDialogHeader>
-                        <AlertDialogTitle>Your Pins:</AlertDialogTitle>
+                        <AlertDialogTitle>My Pins:</AlertDialogTitle>
                     </AlertDialogHeader>
                     {pins.length > 0  ? (
                         pins.map((pin) => (

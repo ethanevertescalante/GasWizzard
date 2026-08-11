@@ -34,3 +34,14 @@ export const signUpForm = z.object({
 })
 
 export type SignUpForm = z.infer<typeof signUpForm>
+
+export const connectionForm = z.object({
+    connectionUsername: z.string().min(1).trim(),
+    numberOfTrips: z.number(),
+    timeframe: z.string(),
+    roundTrip: z.boolean(),
+    startPinId: z.string(),
+    endPinId: z.string(),
+})
+
+export type ConnectionForm = z.infer<typeof connectionForm>
