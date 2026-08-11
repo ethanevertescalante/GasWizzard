@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export type ConnectionType = {
+export type connectionType = {
     id: string;
     connectionUsername: String;
     numberOfTrips: number;

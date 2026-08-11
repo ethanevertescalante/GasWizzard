@@ -1,17 +1,9 @@
 import { prisma } from "@/lib/prisma"
 import {NextRequest, NextResponse} from "next/server";
-import { z } from "zod";
 import {auth} from "@/lib/auth";
 import {headers} from "next/headers";
+import {connectionForm} from "@/lib/ZodForms";
 
-const createConnectionSchema = z.object({
-    connectionUsername: z.string().min(1).trim(),
-    numberOfTrips: z.number().default(1),
-    timeframe: z.string().default("TRIP"),
-    roundTrip: z.boolean().default(false),
-    startPinId: z.string(),
-    endPinId: z.string(),
-})
 
 export async function GET(){
     try{
@@ -63,7 +55,7 @@ export async function POST(request: NextRequest) {
             );
         }
         const body: unknown = await request.json();
-        const result = createConnectionSchema.safeParse(body);
+        const result = connectionForm.safeParse(body);
         console.log(result);
         if(!result.success){
             return NextResponse.json(

@@ -16,6 +16,10 @@
   format("truetype");
 }
 
+body[data-scroll-locked] {
+  overflow: auto !important;
+}
+
 body {
   font-family: "Merriweather Sans", sans-serif;
 }
