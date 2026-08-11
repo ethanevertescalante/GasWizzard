@@ -7,7 +7,6 @@ export type connectionType = {
     roundTrip: boolean;
     startPinId: string;
     endPinId: string;
-    userId: string;
 }
 
 export async function createConnection(data:{
@@ -17,7 +16,6 @@ export async function createConnection(data:{
     timeframe: string;
     startPinId: string;
     endPinId: string;
-    userId: string;
 }) {
     console.log(data);
     const response = await fetch('/api/connections', {
@@ -42,7 +40,7 @@ export async function getConnections(){
         throw new Error("Failed to get connections: ");
     }
 
-    const data: { connections: ConnectionType[] } = await response.json();
+    const data: { connections: connectionType } = await response.json();
 
     return data.connections;
 }

@@ -37,9 +37,9 @@ export type SignUpForm = z.infer<typeof signUpForm>
 
 export const connectionForm = z.object({
     connectionUsername: z.string().min(1).trim(),
-    numberOfTrips: z.number().default(1),
-    timeframe: z.string().default("TRIP"),
-    roundTrip: z.boolean().default(false),
+    numberOfTrips: z.number(),
+    timeframe: z.string(),
+    roundTrip: z.boolean(),
     startPinId: z.string(),
     endPinId: z.string(),
 })

@@ -6,13 +6,6 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-
-import { pinType } from "@/lib/pins";
-import {connectionForm, ConnectionForm} from "@/lib/ZodForms";
-
-import { Controller, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-
 import {
     Field,
     FieldGroup,
@@ -20,7 +13,6 @@ import {
     FieldLegend,
     FieldSet,
 } from "@/components/ui/field";
-
 import {
     Select,
     SelectContent,
@@ -29,7 +21,19 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import { pinType } from "@/lib/pins";
+import {connectionForm, ConnectionForm} from "@/lib/ZodForms";
+
+import { Controller, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+
+
+
 import {Input} from "@/components/ui/input";
+import {Checkbox} from "@/components/ui/checkbox";
+import {Label} from "@/components/ui/label";
+import {createConnection} from "@/lib/connection";
 
 type ConnectionDialogProps = {
     pins: pinType[];
@@ -38,14 +42,14 @@ type ConnectionDialogProps = {
 };
 
 const timeframes = [
-    { label: "Trip", value: "TRIP" },
-    { label: "Week", value: "WEEK" },
-    { label: "Work Week", value: "WORK-WEEK" },
-    { label: "Month", value: "MONTH" },
-    { label: "Year", value: "YEAR" },
+    { label: "Trip (1 Day)", value: "TRIP" },
+    { label: "Work Week (5 Days)", value: "WORK-WEEK" },
+    { label: "Week (7 Days)", value: "WEEK" },
+    { label: "Month (30 days)", value: "MONTH" },
+    { label: "Year (365 Days)", value: "YEAR" },
 ];
 
-const numbers = Array.from({ length: 16 }, (_, index) => ({
+const numbers = Array.from({ length: 7 }, (_, index) => ({
     label: String(index + 1),
     value: index + 1,
 }));
@@ -59,22 +63,23 @@ export function ConnectionDialog({
         register,
         control,
         handleSubmit,
-        formState: { errors, isSubmitting },
+        formState: { errors, isSubmitting, isValid },
     } = useForm<ConnectionForm>({
         resolver: zodResolver(connectionForm),
+        mode: "onChange",
 
         defaultValues: {
             startPinId: startPin.id,
+            numberOfTrips: 1,
+            roundTrip: false,
         },
     });
 
     const onSubmit = async (data: ConnectionForm) => {
         console.log(data);
-
-        // Call your create connection API here
-
+        await createConnection(data);
         // Close after successful creation
-        // onClose();
+        onClose();
     };
 
     return (
@@ -132,7 +137,7 @@ export function ConnectionDialog({
                                             control={control}
                                             render={({ field }) => (
                                                 <Select
-                                                    value={field.value ?? ""}
+                                                    value={field.value}
                                                     onValueChange={field.onChange}
                                                     disabled={true}
                                                 >
@@ -148,31 +153,40 @@ export function ConnectionDialog({
                                         <Controller
                                             name="endPinId"
                                             control={control}
-                                            render={({ field }) => (
-                                                <Select
-                                                    value={field.value ?? ""}
-                                                    onValueChange={field.onChange}
-                                                >
-                                                    <SelectTrigger className="w-full">
-                                                        <SelectValue placeholder="Select a pin" />
-                                                    </SelectTrigger>
+                                            render={({ field }) => {
+                                                const selectedEndPinId = pins.find(
+                                                    (pin ) => pin.id === field.value
+                                                );
 
-                                                    <SelectContent>
-                                                        <SelectGroup>
-                                                            {pins
-                                                                .filter((pin) => pin.id !== startPin.id)
-                                                                .map((pin) => (
-                                                                    <SelectItem
-                                                                        key={pin.id}
-                                                                        value={pin.pinUsername}
-                                                                    >
-                                                                        {pin.pinUsername}
-                                                                    </SelectItem>
-                                                                ))}
-                                                        </SelectGroup>
-                                                    </SelectContent>
-                                                </Select>
-                                            )}
+                                                return(
+                                                    <Select
+                                                        value={field.value ?? ""}
+                                                        onValueChange={field.onChange}
+                                                    >
+                                                        <SelectTrigger className="w-full">
+                                                            <SelectValue placeholder="Select a pin">
+                                                                {selectedEndPinId?.pinUsername}
+                                                            </SelectValue>
+                                                        </SelectTrigger>
+
+                                                        <SelectContent>
+                                                            <SelectGroup>
+                                                                {pins
+                                                                    .filter((pin) => pin.id !== startPin.id)
+                                                                    .map((pin) => (
+                                                                        <SelectItem
+                                                                            key={pin.id}
+                                                                            value={pin.id}
+                                                                        >
+                                                                            {pin.pinUsername}
+                                                                        </SelectItem>
+                                                                    ))}
+                                                            </SelectGroup>
+                                                        </SelectContent>
+                                                    </Select>
+                                                )
+
+                                            }}
                                         />
                                         <FieldLabel>
                                             Number Of Trips
@@ -180,35 +194,40 @@ export function ConnectionDialog({
                                         <Controller
                                             name="numberOfTrips"
                                             control={control}
-                                            render={({ field }) => (
-                                                <Select
-                                                    value={
-                                                        field.value !== undefined
-                                                            ? String(field.value)
-                                                            : ""
-                                                    }
-                                                    onValueChange={(value) =>
-                                                        field.onChange(Number(value))
-                                                    }
-                                                >
-                                                    <SelectTrigger className="w-full">
-                                                        <SelectValue placeholder="Number of trips" />
-                                                    </SelectTrigger>
+                                            render={({ field }) => {
+                                                const selectedNumberOfTrips = numbers.find(
+                                                    (number) => number.value === field.value
+                                                );
 
-                                                    <SelectContent>
-                                                        <SelectGroup>
-                                                            {numbers.map((number) => (
-                                                                <SelectItem
-                                                                    key={number.value}
-                                                                    value={String(number.value)}
-                                                                >
-                                                                    {number.label}
-                                                                </SelectItem>
-                                                            ))}
-                                                        </SelectGroup>
-                                                    </SelectContent>
-                                                </Select>
-                                            )}
+                                                return (
+                                                    <Select
+                                                        value={field.value}
+                                                        onValueChange={(value) =>
+                                                            field.onChange(Number(value))
+                                                        }
+                                                    >
+                                                        <SelectTrigger className="w-full">
+                                                            <SelectValue placeholder="Number of trips" >
+                                                                {selectedNumberOfTrips?.label}
+                                                            </SelectValue>
+                                                        </SelectTrigger>
+
+                                                        <SelectContent>
+                                                            <SelectGroup>
+                                                                {numbers.map((number) => (
+                                                                    <SelectItem
+                                                                        key={number.value}
+                                                                        value={String(number.value)}
+                                                                    >
+                                                                        {number.label}
+                                                                    </SelectItem>
+                                                                ))}
+                                                            </SelectGroup>
+                                                        </SelectContent>
+                                                    </Select>
+                                                );
+
+                                            }}
                                         />
                                         <FieldLabel>
                                             Timeframe
@@ -216,34 +235,47 @@ export function ConnectionDialog({
                                         <Controller
                                             name="timeframe"
                                             control={control}
-                                            render={({ field }) => (
-                                                <Select
-                                                    value={field.value ?? ""}
-                                                    onValueChange={field.onChange}
-                                                >
-                                                    <SelectTrigger className="w-full">
-                                                        <SelectValue placeholder="Select timeframe" />
-                                                    </SelectTrigger>
+                                            render={({ field }) => {
+                                                const selectedTimeframe = timeframes.find(
+                                                    (timeframe) => timeframe.value === field.value
+                                                );
 
-                                                    <SelectContent>
-                                                        <SelectGroup>
-                                                            {timeframes.map((timeframe) => (
-                                                                <SelectItem
-                                                                    key={timeframe.value}
-                                                                    value={timeframe.label}
-                                                                >
-                                                                    {timeframe.label}
-                                                                </SelectItem>
-                                                            ))}
-                                                        </SelectGroup>
-                                                    </SelectContent>
-                                                </Select>
-                                            )}
+                                                return (
+                                                    <Select
+                                                        value={field.value}
+                                                        onValueChange={field.onChange}
+                                                    >
+                                                        <SelectTrigger className="w-full">
+                                                            <SelectValue placeholder="Select timeframe">
+                                                                {selectedTimeframe?.label}
+                                                            </SelectValue>
+                                                        </SelectTrigger>
+
+                                                        <SelectContent>
+                                                            <SelectGroup>
+                                                                {timeframes.map((timeframe) => (
+                                                                    <SelectItem
+                                                                        key={timeframe.value}
+                                                                        value={timeframe.value}
+                                                                    >
+                                                                        {timeframe.label}
+                                                                    </SelectItem>
+                                                                ))}
+                                                            </SelectGroup>
+                                                        </SelectContent>
+                                                    </Select>
+                                                );
+                                            }}
                                         />
+
                                     </div>
                                 </FieldGroup>
                             </FieldSet>
                         </FieldGroup>
+                        <Field orientation="horizontal" className="pt-4">
+                            <Checkbox {...register("roundTrip")} id="round-trip-checkbox" name="round-trip-checkbox"/>
+                            <Label htmlFor="round-trip-label" >Round Trip?</Label>
+                        </Field>
                     </form>
                 </div>
                 <div className="flex flex-col justify-center gap-3">
@@ -257,8 +289,8 @@ export function ConnectionDialog({
                     <button
                         type="submit"
                         form="connection-form"
-                        disabled={isSubmitting}
-                        className="w-full rounded-md bg-orange-500 hover:bg-orange-300 px-4 py-2 font-bold text-white disabled:opacity-50"
+                        disabled={isSubmitting || !isValid}
+                        className="w-full rounded-md bg-orange-500 disabled:cursor-not-allowed  px-4 py-2 font-bold text-white disabled:opacity-50"
                     >
                         {isSubmitting ? "Creating..." : "Create Connection"}
                     </button>
