@@ -28,6 +28,7 @@ export function ConnectionDialog({
 
 
 
+    // @ts-ignore
     return (
         <AlertDialog
             open={ConnectionsDialogOpen}
@@ -40,7 +41,13 @@ export function ConnectionDialog({
                         <AlertDialogTitle>My Connections:</AlertDialogTitle>
                     </AlertDialogHeader>
                     {connections.length > 0  ? (
-                        connections.map((connection) => (
+                        connections.map((connection) => {
+
+                            const startPinCoord = connection.startPinId
+                            const endPinCoord = connection.endPinId
+
+
+                        return (
                             <div key={connection.id} className="block justify-left gap-2 text-nowrap hover:cursor-pointer hover:bg-gray-200 p-2 rounded-2xl">
                                 <div>{connection.connectionUsername}</div>
                                 <div>{connection.numberOfTrips} {connection.timeframe}</div>
@@ -53,8 +60,8 @@ export function ConnectionDialog({
                                 )}
                                 </div>
                             </div>
-                        ))
-                    ): (
+                        )})) :
+                        (
                         <div className="text-center">You have no connections. Make one by clicking on a pin!</div>
                     )}
                 </div>
